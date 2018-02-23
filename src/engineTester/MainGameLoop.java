@@ -39,12 +39,20 @@ public class MainGameLoop {
         staticGrass.getTexture().setHasTransparency(true);
         staticGrass.getTexture().setUseFakeLighting(true);
         
+        ModelData fernData = OBJFileLoader.loadOBJ("fern");
+        RawModel fernModel = loader.loadToVAO(fernData.getVertices(), fernData.getTextureCoords(), fernData.getNormals(), fernData.getIndices());
+        TexturedModel staticFern = new TexturedModel(fernModel,new ModelTexture(loader.loadTexture("fern")));
+        staticFern.getTexture().setHasTransparency(true);
+        staticFern.getTexture().setUseFakeLighting(true);
+        
         List<Entity> trees = new ArrayList<Entity>();
         List<Entity> grass = new ArrayList<Entity>();
+        List<Entity> ferns = new ArrayList<Entity>();
         Random random = new Random();
         for(int i=0;i<500;i++){
             trees.add(new Entity(staticTree, new Vector3f(random.nextFloat()*800 - 400,0,random.nextFloat() * -600),0,0,0,3));
             grass.add(new Entity(staticGrass,new Vector3f(random.nextFloat()*800 - 400,0,random.nextFloat() * -600),0,0,0,1));
+            ferns.add(new Entity(staticFern,new Vector3f(random.nextFloat()*800 - 400,0,random.nextFloat() * -600),0,0,0,1));
         }
               
          
@@ -66,6 +74,9 @@ public class MainGameLoop {
             }
             for(Entity gr : grass) {
             	renderer.processEntity(gr);
+            }
+            for(Entity fern : ferns) {
+            	renderer.processEntity(fern);
             }
             renderer.render(light, camera);
             DisplayManager.updateDisplay();
