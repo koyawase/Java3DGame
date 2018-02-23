@@ -29,7 +29,7 @@ public class MainGameLoop {
          
          
         RawModel treeModel = OBJLoader.loadObjModel("tree", loader);
-        TexturedModel staticTree = new TexturedModel(treeModel,new ModelTexture(loader.loadTexture("tree")));
+        TexturedModel staticTree = new TexturedModel(treeModel,new ModelTexture(loader.loadTexture("lowPolyTree")));
         
         RawModel grassModel = OBJLoader.loadObjModel("grassModel", loader);
         TexturedModel staticGrass = new TexturedModel(grassModel, new ModelTexture(loader.loadTexture("grassTexture")));
@@ -45,7 +45,7 @@ public class MainGameLoop {
         }
               
          
-        Light light = new Light(new Vector3f(30,30,-20),new Vector3f(1,1,1));
+        Light light = new Light(new Vector3f(100,100,-20),new Vector3f(1,1,1));
          
         Terrain terrain = new Terrain(0,-1,loader,new ModelTexture(loader.loadTexture("grass")));
         Terrain terrain2 = new Terrain(1,-1,loader,new ModelTexture(loader.loadTexture("grass")));
@@ -59,7 +59,7 @@ public class MainGameLoop {
             renderer.processTerrain(terrain);
             renderer.processTerrain(terrain2);
             for(Entity tree :trees){
-                renderer.processEntity(tree);
+                renderer.processEntity(tree); 
             }
             for(Entity gr : grass) {
             	renderer.processEntity(gr);
