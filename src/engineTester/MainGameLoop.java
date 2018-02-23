@@ -6,14 +6,15 @@ import java.util.Random;
  
 import models.RawModel;
 import models.TexturedModel;
- 
+import objConverter.ModelData;
+import objConverter.OBJFileLoader;
+
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
  
 import renderEngine.DisplayManager;
 import renderEngine.Loader;
 import renderEngine.MasterRenderer;
-import renderEngine.OBJLoader;
 import terrains.Terrain;
 import textures.ModelTexture;
 import entities.Camera;
@@ -27,11 +28,13 @@ public class MainGameLoop {
         DisplayManager.createDisplay();
         Loader loader = new Loader();
          
-         
-        RawModel treeModel = OBJLoader.loadObjModel("tree", loader);
+
+        ModelData treeData = OBJFileLoader.loadOBJ("tree");
+        RawModel treeModel = loader.loadToVAO(treeData.getVertices(), treeData.getTextureCoords(), treeData.getNormals(), treeData.getIndices());
         TexturedModel staticTree = new TexturedModel(treeModel,new ModelTexture(loader.loadTexture("lowPolyTree")));
         
-        RawModel grassModel = OBJLoader.loadObjModel("grassModel", loader);
+        ModelData grassData = OBJFileLoader.loadOBJ("grassModel");
+        RawModel grassModel = loader.loadToVAO(grassData.getVertices(), grassData.getTextureCoords(), grassData.getNormals(), grassData.getIndices());
         TexturedModel staticGrass = new TexturedModel(grassModel, new ModelTexture(loader.loadTexture("grassTexture")));
         staticGrass.getTexture().setHasTransparency(true);
         staticGrass.getTexture().setUseFakeLighting(true);
