@@ -22,6 +22,7 @@ import textures.TerrainTexturePack;
 import entities.Camera;
 import entities.Entity;
 import entities.Light;
+import entities.Player;
  
 public class MainGameLoop {
  
@@ -84,9 +85,16 @@ public class MainGameLoop {
         Camera camera = new Camera();   
         MasterRenderer renderer = new MasterRenderer();
          
+        ModelData playerData = OBJFileLoader.loadOBJ("person");
+        RawModel playerModel = loader.loadToVAO(playerData.getVertices(), playerData.getTextureCoords(), playerData.getNormals(), playerData.getIndices());
+        TexturedModel playerTexture = new TexturedModel(playerModel, new ModelTexture(loader.loadTexture("playerTexture")));
+        
+        Player player = new Player(playerTexture, new Vector3f(50,0,-40), 0, 0, 0, 0.40f);
+        
         while(!Display.isCloseRequested()){
-            camera.move();
-             
+            player.move();
+            renderer.processEntity(player);
+            
             renderer.processTerrain(terrain);
             renderer.processTerrain(terrain2);
             for(Entity tree :trees){
