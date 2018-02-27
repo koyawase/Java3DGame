@@ -53,11 +53,19 @@ public class Camera {
 	}
 
 	private float calculateHorizontalDistance() {
-		return (float) (distanceFromPlayer * Math.cos(Math.toRadians(pitch)));
+		float hD = (float) (distanceFromPlayer * Math.cos(Math.toRadians(pitch)));
+		if(hD < 1) {
+			hD = 1;
+		}
+		return hD;
 	}
 
 	private float calculateVerticalDistance() {
-		return (float) (distanceFromPlayer * Math.sin(Math.toRadians(pitch)));
+		float vD = (float) (distanceFromPlayer * Math.sin(Math.toRadians(pitch)));
+		if(vD < 1) {
+			vD = 1;
+		}
+		return vD;
 	}
 
 	private void calculateZoom() {
@@ -69,6 +77,12 @@ public class Camera {
 		if (Mouse.isButtonDown(1)) {
 			float pitchChange = Mouse.getDY() * 0.1f;
 			pitch -= pitchChange;
+		}
+		if(pitch < 0) {
+			pitch = 0;
+		}
+		else if(pitch > 90) {
+			pitch = 90;
 		}
 	}
 

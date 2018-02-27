@@ -88,7 +88,7 @@ public class MainGameLoop {
         RawModel playerModel = loader.loadToVAO(playerData.getVertices(), playerData.getTextureCoords(), playerData.getNormals(), playerData.getIndices());
         TexturedModel playerTexture = new TexturedModel(playerModel, new ModelTexture(loader.loadTexture("playerTexture")));
         
-        Player player = new Player(playerTexture, new Vector3f(50,0,-40), 0, 0, 0, 0.40f);
+        Player player = new Player(playerTexture, new Vector3f(100,0,-100), 0, 0, 0, 0.40f);
         Camera camera = new Camera(player);
         
         while(!Display.isCloseRequested()){
