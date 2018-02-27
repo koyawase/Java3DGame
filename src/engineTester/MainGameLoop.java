@@ -82,7 +82,6 @@ public class MainGameLoop {
         Terrain terrain = new Terrain(0,-1,loader,texturePack,blendMap);
         Terrain terrain2 = new Terrain(1,-1,loader,texturePack,blendMap);
          
-        Camera camera = new Camera();   
         MasterRenderer renderer = new MasterRenderer();
          
         ModelData playerData = OBJFileLoader.loadOBJ("person");
@@ -90,8 +89,10 @@ public class MainGameLoop {
         TexturedModel playerTexture = new TexturedModel(playerModel, new ModelTexture(loader.loadTexture("playerTexture")));
         
         Player player = new Player(playerTexture, new Vector3f(50,0,-40), 0, 0, 0, 0.40f);
+        Camera camera = new Camera(player);
         
         while(!Display.isCloseRequested()){
+        	camera.move();
             player.move();
             renderer.processEntity(player);
             
