@@ -25,11 +25,13 @@ import entities.Light;
 import entities.Player;
  
 public class MainGameLoop {
- 
+	
+	private static Loader loader;
+	
     public static void main(String[] args) {
  
         DisplayManager.createDisplay();
-        Loader loader = new Loader();
+        loader = new Loader();
          
         //********** TERRAIN TEXTURE STUFF **********
         
@@ -43,24 +45,15 @@ public class MainGameLoop {
         
         //*******************************************
         
+        TexturedModel staticTree = getTexturedModel("tree","tree");
         
-        ModelData treeData = OBJFileLoader.loadOBJ("tree");
-        RawModel treeModel = loader.loadToVAO(treeData.getVertices(), treeData.getTextureCoords(), treeData.getNormals(), treeData.getIndices());
-        TexturedModel staticTree = new TexturedModel(treeModel,new ModelTexture(loader.loadTexture("tree")));
+        TexturedModel lowPolyStaticTree = getTexturedModel("lowPolyTree","lowPolyTree");
         
-        ModelData lowTreeData = OBJFileLoader.loadOBJ("lowPolyTree");
-        RawModel lowTreeModel = loader.loadToVAO(lowTreeData.getVertices(), lowTreeData.getTextureCoords(), lowTreeData.getNormals(), lowTreeData.getIndices());
-        TexturedModel lowstaticTree = new TexturedModel(lowTreeModel,new ModelTexture(loader.loadTexture("lowPolyTree")));
-        
-        ModelData grassData = OBJFileLoader.loadOBJ("grassModel");
-        RawModel grassModel = loader.loadToVAO(grassData.getVertices(), grassData.getTextureCoords(), grassData.getNormals(), grassData.getIndices());
-        TexturedModel staticGrass = new TexturedModel(grassModel, new ModelTexture(loader.loadTexture("grassTexture")));
+        TexturedModel staticGrass = getTexturedModel("grassModel","grassTexture");
         staticGrass.getTexture().setHasTransparency(true);
         staticGrass.getTexture().setUseFakeLighting(true);
         
-        ModelData fernData = OBJFileLoader.loadOBJ("fern");
-        RawModel fernModel = loader.loadToVAO(fernData.getVertices(), fernData.getTextureCoords(), fernData.getNormals(), fernData.getIndices());
-        TexturedModel staticFern = new TexturedModel(fernModel,new ModelTexture(loader.loadTexture("fern")));
+        TexturedModel staticFern = getTexturedModel("fern","fern");
         staticFern.getTexture().setHasTransparency(true);
         staticFern.getTexture().setUseFakeLighting(true);
         
@@ -73,7 +66,7 @@ public class MainGameLoop {
             trees.add(new Entity(staticTree, new Vector3f(random.nextFloat()*800 - 400,0,random.nextFloat() * -600),0,0,0,3));
             grass.add(new Entity(staticGrass,new Vector3f(random.nextFloat()*800 - 400,0,random.nextFloat() * -600),0,0,0,1));
             ferns.add(new Entity(staticFern,new Vector3f(random.nextFloat()*800 - 400,0,random.nextFloat() * -600),0,0,0,0.75f));
-            lpTrees.add(new Entity(lowstaticTree, new Vector3f(random.nextFloat()*800 - 400,0,random.nextFloat() * -600),0,0,0,0.40f));
+            lpTrees.add(new Entity(lowPolyStaticTree, new Vector3f(random.nextFloat()*800 - 400,0,random.nextFloat() * -600),0,0,0,0.40f));
         }
               
          
@@ -120,4 +113,10 @@ public class MainGameLoop {
  
     }
  
+    
+    private static TexturedModel getTexturedModel(String object, String texture) {
+    	ModelData data = OBJFileLoader.loadOBJ(object);
+    	RawModel model = loader.loadToVAO(data.getVertices(), data.getTextureCoords(), data.getNormals(), data.getIndices());
+    	return new TexturedModel(model,new ModelTexture(loader.loadTexture(texture)));  	
+    }
 }
