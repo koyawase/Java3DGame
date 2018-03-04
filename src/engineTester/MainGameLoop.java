@@ -34,7 +34,7 @@ public class MainGameLoop {
         loader = new Loader();
          
         //********** TERRAIN TEXTURE STUFF **********
-        
+           
         TerrainTexture backgroundTexture = new TerrainTexture(loader.loadTexture("grass"));
         TerrainTexture rTexture = new TerrainTexture(loader.loadTexture("mud"));
         TerrainTexture gTexture = new TerrainTexture(loader.loadTexture("grassFlowers"));
@@ -43,6 +43,8 @@ public class MainGameLoop {
         TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture);
         TerrainTexture blendMap = new TerrainTexture(loader.loadTexture("blendMap"));
         
+        
+        Terrain terrain = new Terrain(0,-1,loader,texturePack,blendMap,"heightMap");
         //*******************************************
         
         TexturedModel staticTree = getTexturedModel("tree","tree");
@@ -56,24 +58,32 @@ public class MainGameLoop {
         TexturedModel staticFern = getTexturedModel("fern","fern");
         staticFern.getTexture().setHasTransparency(true);
         staticFern.getTexture().setUseFakeLighting(true);
-        
-        List<Entity> trees = new ArrayList<Entity>();
-        List<Entity> grass = new ArrayList<Entity>();
-        List<Entity> ferns = new ArrayList<Entity>();
-        List<Entity> lpTrees = new ArrayList<Entity>();
+
+        List<Entity> entities = new ArrayList<Entity>();
         Random random = new Random();
         for(int i=0;i<500;i++){
-            trees.add(new Entity(staticTree, new Vector3f(random.nextFloat()*800 - 400,0,random.nextFloat() * -600),0,0,0,3));
-            grass.add(new Entity(staticGrass,new Vector3f(random.nextFloat()*800 - 400,0,random.nextFloat() * -600),0,0,0,1));
-            ferns.add(new Entity(staticFern,new Vector3f(random.nextFloat()*800 - 400,0,random.nextFloat() * -600),0,0,0,0.75f));
-            lpTrees.add(new Entity(lowPolyStaticTree, new Vector3f(random.nextFloat()*800 - 400,0,random.nextFloat() * -600),0,0,0,0.40f));
+        	float x = random.nextFloat()*800 - 400;
+        	float z = random.nextFloat() * -600;
+        	float y = terrain.getHeightOfTerrain(x, z);
+        	if(i % 1 == 0) {
+        		entities.add(new Entity(staticGrass,new Vector3f(x,y,z),0,0,0,1));
+        	}
+        	if(i % 2 == 0) {
+        		entities.add(new Entity(staticFern,new Vector3f(x,y,z),0,0,0,0.75f));
+        	}
+        	else if(i % 3 == 0) {
+        		entities.add(new Entity(lowPolyStaticTree, new Vector3f(x,y,z),0,0,0,0.40f));
+        	}
+        	else if(i % 5 == 0) {
+        		entities.add(new Entity(staticTree, new Vector3f(x,y,z),0,0,0,3));
+        	}
         }
               
          
         Light light = new Light(new Vector3f(100,100,-20),new Vector3f(1,1,1));
          
-        Terrain terrain = new Terrain(0,-1,loader,texturePack,blendMap,"heightMap");
-        Terrain terrain2 = new Terrain(1,-1,loader,texturePack,blendMap,"heightMap");
+        //Terrain terrain = new Terrain(0,-1,loader,texturePack,blendMap,"heightMap");
+        //Terrain terrain2 = new Terrain(1,-1,loader,texturePack,blendMap,"heightMap");
          
         MasterRenderer renderer = new MasterRenderer();
          
@@ -86,22 +96,13 @@ public class MainGameLoop {
         
         while(!Display.isCloseRequested()){
         	camera.move();
-            player.move();
+            player.move(terrain);
             renderer.processEntity(player);
             
             renderer.processTerrain(terrain);
-            renderer.processTerrain(terrain2);
-            for(Entity tree :trees){
-                renderer.processEntity(tree); 
-            }
-            for(Entity gr : grass) {
-            	renderer.processEntity(gr);
-            }
-            for(Entity fern : ferns) {
-            	renderer.processEntity(fern);
-            }
-            for(Entity lpTree : lpTrees) {
-            	renderer.processEntity(lpTree);
+ 
+            for(Entity entity : entities) {
+            	renderer.processEntity(entity);
             }
             renderer.render(light, camera);
             DisplayManager.updateDisplay();
