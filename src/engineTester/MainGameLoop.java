@@ -55,9 +55,11 @@ public class MainGameLoop {
         staticGrass.getTexture().setHasTransparency(true);
         staticGrass.getTexture().setUseFakeLighting(true);
         
-        TexturedModel staticFern = getTexturedModel("fern","fern");
-        staticFern.getTexture().setHasTransparency(true);
-        staticFern.getTexture().setUseFakeLighting(true);
+        ModelTexture fernTextureAtlas = new ModelTexture(loader.loadTexture("fern"));
+        fernTextureAtlas.setNumberOfRows(2);
+        ModelData fernData = OBJFileLoader.loadOBJ("fern");
+        RawModel fernModel = loader.loadToVAO(fernData.getVertices(), fernData.getTextureCoords(), fernData.getNormals(), fernData.getIndices());
+        TexturedModel staticFern = new TexturedModel(fernModel,fernTextureAtlas);
 
         List<Entity> entities = new ArrayList<Entity>();
         Random random = new Random();
@@ -69,7 +71,7 @@ public class MainGameLoop {
         		entities.add(new Entity(staticGrass,new Vector3f(x,y,z),0,0,0,1));
         	}
         	if(i % 2 == 0) {
-        		entities.add(new Entity(staticFern,new Vector3f(x,y,z),0,0,0,0.75f));
+        		entities.add(new Entity(staticFern, random.nextInt(4),new Vector3f(x,y,z),0,0,0,0.75f));
         	}
         	else if(i % 3 == 0) {
         		entities.add(new Entity(lowPolyStaticTree, new Vector3f(x,y,z),0,0,0,0.40f));
